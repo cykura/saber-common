@@ -14,10 +14,7 @@ export class PhantomWalletAdapter
   }
 
   private get _provider(): PhantomProvider | undefined {
-    if (window?.solana?.isPhantom) {
-      return window.solana;
-    }
-    return undefined;
+    return window?.phantom?.solana
   }
 
   private _handleConnect = (...args: unknown[]) => {
@@ -32,6 +29,7 @@ export class PhantomWalletAdapter
     return this._provider?.isConnected || false;
   }
 
+  // problem here?
   get autoApprove(): boolean {
     return this._provider?.autoApprove || false;
   }
@@ -63,12 +61,10 @@ export class PhantomWalletAdapter
       window.open("https://phantom.app/", "_blank", "noopener noreferrer");
       throw new Error("Phantom not installed");
     }
-    if (!this._provider.listeners("connect").length) {
-      this._provider?.on("connect", this._handleConnect);
-    }
-    if (!this._provider.listeners("disconnect").length) {
-      this._provider?.on("disconnect", this._handleDisconnect);
-    }
+    // Fix- Listener length is not 0 now
+    this._provider?.on("connect", this._handleConnect);
+    this._provider?.on("disconnect", this._handleDisconnect);
+
     await this._provider?.connect();
   };
 

@@ -33,6 +33,7 @@ export interface MathWalletProvider {
 }
 declare global {
   interface Window {
+    phantom?: { solana?: PhantomProvider }
     solana?:
       | MathWalletProvider
       | PhantomProvider
